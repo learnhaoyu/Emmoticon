@@ -41,10 +41,11 @@ def callback(future):
     f.write(json.dumps(items))
 
 
-
-loop = asyncio.get_event_loop()
-
-task = asyncio.ensure_future(main())
-task.add_done_callback(callback)
-loop.run_until_complete(task)
-loop.close()
+def GetUserinfo():
+    loop = asyncio.get_event_loop()
+    task = asyncio.ensure_future(main())
+    task.add_done_callback(callback)
+    loop.run_until_complete(task)
+    # task = asyncio.ensure_future(main())
+    # task.add_done_callback(callback)
+    # await asyncio.wait(task)

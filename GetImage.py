@@ -8,6 +8,7 @@ import os
 import aiofiles
 from time import time
 import json
+from GetEmmoticonFromUser import GetUserinfo
 baseurl="https://steamcommunity-a.akamaihd.net/economy/image/"
 # def get(soup,emname):#re get download url
 #     for s in soup.findAll('a'):
@@ -36,34 +37,8 @@ async def download(session ,url,k):#download image
                     fd.write(chunk)
     print(k + 'finish download')
 
-class Getimage:
-    def __init__(self,Emoticonurl,k,session):
-        self.session=session
-        self.url=baseurl+Emoticonurl
-        self.k=k
 
-    async def geti(self):
-        if self.url!=None:
-            await asyncio.wait(asyncio.ensure_future(download(self.session,self.url,self.k)))
-        #     async with self.session.get(self.url[k],proxy="http://127.0.0.1:1087",headers=headers,verify_ssl=False)as resp:
-        #         soup=BeautifulSoup(await resp.text(),'lxml')
-        #         self.imgurl=get(soup,k)
-        #         print(self.imgurl)
-        #         if(self.imgurl==None):
-        #             logging.warning("没有找到'%s'"%k)
-        #         else:
-        #             temp[k]=self.imgurl
-        # else:
-        #     temp[k]=baseurl+self.url[k]
-        # if temp:
-        #     #await asyncio.wait(asyncio.ensure_future(download(self.session,temp)))
-
-
-
-
-
-
-
+#初始化
 async def init(loop,target):
 
     task = []
@@ -92,7 +67,11 @@ def file_name(file_dir,targets):
             # print(dirs) #当前路径下所有子目录
             # print(files) #当前路径下所有非目录子文件
 
+#获取用户信息
+start = time()
 
+GetUserinfo()
+#获取表情
 f=open("items","r")
 items=json.loads(f.read())
 targets={}
@@ -104,7 +83,7 @@ for item in items:
 file_name(os.getcwd() + r'/downloadimg',targets)
 
 print(targets)
-start = time()
+
 loop=asyncio.get_event_loop()
 task = init(loop, targets)
 try:
@@ -118,4 +97,4 @@ finally:
 
 loop.close()
 stop = time()
-print(str(stop-start) + "秒")
+print("下载耗费秒："+str(stop-start))
