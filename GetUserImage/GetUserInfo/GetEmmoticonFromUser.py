@@ -1,22 +1,19 @@
-from defaultconfig import userid,headers,storehouseurl
+import sys
 import aiohttp
 import asyncio
-from bs4 import BeautifulSoup
-import re
-import logging
-import os
-import aiofiles
-from time import time
 import json
 import copy
+import os
+from GetUserImage.DefaultConfig import userid,headers,storehouseurl
+
 header = copy.deepcopy(headers)
 header["Referer"] = "https://steamcommunity.com/profiles/"+userid+"/inventory/"
 
 async def fetch(session, url):
-   async with session.get(url,proxy="http://127.0.0.1:1087",headers=headers,verify_ssl=False) as response:
+   async with session.get(url,proxy="http://127.0.0.1:1080",headers=headers) as response:
        return await response.text()
 
-async def main():
+async def DownLoadUserInfo():
     global storehouseurl
 
     totalcount =- 1
@@ -35,16 +32,12 @@ async def main():
                 storehouseurl = storehouseurl+"&start_assetid="+last_assetid
     return item
 
-def callback(future):
+def DownLoadUserInfocallback(future):
     items=future.result()
     f=open("items",'w')
     f.write(json.dumps(items))
+def GetDownLoadUserInfofuture():
+    DownLoadUserInfofuture = asyncio.ensure_future(DownLoadUserInfo())
+    DownLoadUserInfofuture.add_done_callback(DownLoadUserInfocallback)
+    return DownLoadUserInfofuture
 
-
-
-loop = asyncio.get_event_loop()
-
-task = asyncio.ensure_future(main())
-task.add_done_callback(callback)
-loop.run_until_complete(task)
-loop.close()

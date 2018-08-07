@@ -6,4 +6,5 @@ headers={
 }
 userid="76561198025735775"
 storehouseurl="https://steamcommunity.com/inventory/"+userid+"/753/6?l=schinese&count=2000"
+updateuserinfo=False
 #&start_assetid=6639757612
